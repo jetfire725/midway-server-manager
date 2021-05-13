@@ -3,4 +3,4 @@ Midway server manager is an (In progress) Java application that accompanies your
 and tie static connection endpoints to servers with dynamic IP addresses. 
 
 When complete the architecture will consist of 3 components including a local server utility, spring web app for authenticating users/relaying info to the local server, and an 
-android application for easy remote management. 
+client side application for easy remote management. 
