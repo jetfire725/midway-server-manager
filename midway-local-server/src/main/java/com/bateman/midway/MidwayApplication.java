@@ -18,11 +18,13 @@ public class MidwayApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MidwayApplication.class, args);
+			FileProcessor.setPropertyPath("src/main/resources/server.properties");
+//			System.out.println(FileProcessor.propertiesToJson().toString());
+
 //			SshClient ssh = new SshClient();
 //			File script = ssh.createScript();
 //			ssh.copyScriptFile(script);
 //			ssh.executePortForward();
-		//FileProcessor fp = new FileProcessor("src/main/resources");
 		//fp.setServerProperty("server-ip", "123.456.678.345");
 	}
 	
