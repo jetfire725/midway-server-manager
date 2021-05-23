@@ -11,6 +11,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import com.bateman.midway.service.FileProcessor;
+import com.bateman.midway.service.IPService;
 import com.bateman.midway.service.SshClient;
 
 @SpringBootApplication
@@ -18,7 +19,8 @@ public class MidwayApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MidwayApplication.class, args);
-			FileProcessor.setPropertyPath("src/main/resources/server.properties");
+			IPService.updateExternalIp();
+			//FileProcessor.setPropertyPath("src/main/resources/server.properties");
 //			System.out.println(FileProcessor.propertiesToJson().toString());
 
 //			SshClient ssh = new SshClient();
