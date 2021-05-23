@@ -14,11 +14,11 @@ export class AppComponent implements OnInit {
   constructor(private configService: ConfigService){}
 
   ngOnInit(){
-    this.getResponse()
+    this.setServerProperty()
   }
 
-  public getResponse(): void {
-    this.configService.getResponse().subscribe(
+  public setServerProperty(): void {
+    this.configService.setServerProperty("server-ip", "123").subscribe(
       (response: boolean) => {
         this.response = response;
         console.log(response)

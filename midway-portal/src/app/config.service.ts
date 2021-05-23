@@ -11,8 +11,8 @@ export class ConfigService {
 
     constructor(private http: HttpClient) { }
 
-    public getResponse(): Observable<boolean> {
-        return this.http.get<boolean>(`${this.serverAddress}/start`)
+    public setServerProperty(property: string, value: string): Observable<boolean> {
+        return this.http.post<boolean>(`${this.serverAddress}/setProperty`, {"property": property, "value": value})
     }
 }
 
