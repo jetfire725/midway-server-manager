@@ -3,6 +3,8 @@ package com.bateman.midway.service;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.HashMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -30,10 +32,19 @@ public class IPService {
 	//SEND UPDATE TO SERVER THAT DNAMIC IP HAS CHANGED
 	public static boolean updateExternalIp() {
 		RestTemplate restTemplate = new RestTemplate();
+		HashMap<String, String> request = new HashMap<String, String>();
+		request.put("user", "jetfire");
+		request.put("oldip", "123");
+		request.put("newip", "456");
+		try {
+			String result = restTemplate.postForObject("http://localhost:3000/update/ip", request, String.class);
+			System.out.println(result);
+			return true;
+		} catch (Exception e) {
+			log.error(e.getMessage());
+			return false;
+		}
 		
-		String result = restTemplate.postForObject("https://httpbin.org/anything", "ip", String.class);
-		System.out.println(result);
-		return true;
 	}
 	
 }
