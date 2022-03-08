@@ -13,6 +13,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class IPService {
 	static Logger log = LoggerFactory.getLogger(SshClient.class);
+	private static String webServerHost = "http://localhost:3000";
 	
 	//GET EXTERNAL IP FROM AWS SERVICE
 	public static String getExternalIp() {
@@ -29,22 +30,38 @@ public class IPService {
 		
 	}
 	
-	//SEND UPDATE TO SERVER THAT DNAMIC IP HAS CHANGED
-	public static boolean updateExternalIp() {
+	//SEND UPDATE TO SERVER THAT DYNAMIC IP HAS CHANGED
+	public static boolean updateExternalIp(String serverId) {
+		String externalIp = getExternalIp();
+		if (externalIp.equals(pollForIp(serverId))){
+			return true;
+		}
+		log.info("UPDATING WEBSERVER EXTERNAL IP...");
 		RestTemplate restTemplate = new RestTemplate();
 		HashMap<String, String> request = new HashMap<String, String>();
-		request.put("user", "jetfire");
-		request.put("oldip", "123");
-		request.put("newip", "456");
+		request.put("serverId", serverId);
+		request.put("ip", externalIp);
 		try {
-			String result = restTemplate.postForObject("http://localhost:3000/update/ip", request, String.class);
-			System.out.println(result);
+			String result = restTemplate.postForObject(webServerHost+"/update/ip", request, String.class);
 			return true;
 		} catch (Exception e) {
 			log.error(e.getMessage());
 			return false;
 		}
 		
+	}
+
+	public static String pollForIp(String serverId){
+		log.info("CHECKING WEBSERVER EXTERNAL IP...");
+		RestTemplate restTemplate = new RestTemplate();
+		HashMap<String, String> request = new HashMap<String, String>();
+		request.put("serverId", serverId);
+		try {
+			String result = restTemplate.postForObject(webServerHost + "/get/ip", request, String.class);
+			return result;
+		} catch (Exception e) {
+			return "False";
+		}
 	}
 	
 }
