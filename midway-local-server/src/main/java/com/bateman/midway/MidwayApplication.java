@@ -1,8 +1,11 @@
 package com.bateman.midway;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 
+import com.bateman.midway.view.ViewController;
+import javafx.application.Application;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -18,16 +21,21 @@ import com.bateman.midway.service.SshClient;
 public class MidwayApplication {
 
 	public static void main(String[] args) {
+		//WEBSERVER CURRENTLY DISABLED IN APPLICATION.PROPERTIES
 		SpringApplication.run(MidwayApplication.class, args);
-			IPService.updateExternalIp();
-			//FileProcessor.setPropertyPath("src/main/resources/server.properties");
-//			System.out.println(FileProcessor.propertiesToJson().toString());
+		Application.launch(ViewController.class, args);
 
-//			SshClient ssh = new SshClient();
-//			File script = ssh.createScript();
-//			ssh.copyScriptFile(script);
-//			ssh.executePortForward();
-		//fp.setServerProperty("server-ip", "123.456.678.345");
+//		FileProcessor.setServerDatPath("C:/Users/Ethan/AppData/Roaming/.minecraft/servers.dat");
+//		FileProcessor.setPropertiesPath("src/main/resources/server.properties");
+//
+//		SshClient ssh = new SshClient();
+//		File script = ssh.createScript();
+//		ssh.copyScriptFile(script);
+//		ssh.executePortForward();
+//
+//		IPService.updateExternalIp("theatrejesus");
+//		FileProcessor.updateClientServerAddress("theatrejesus", IPService.pollForIp("theatrejesus"));
+
 	}
 	
 	@Bean
@@ -45,5 +53,6 @@ public class MidwayApplication {
 		urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 		return new CorsFilter(urlBasedCorsConfigurationSource);
 	}
+
 
 }

@@ -41,6 +41,7 @@ public class SshClient {
 	
 	//GET DEFAULT GATEWAY ADDRESS
 	public String getDefaultGateway() {
+		log.info("CHECKING DEFAULT GATEWAY ADDRESS...");
 		String ipAddress = null;
 		try {
         	Process process = Runtime.getRuntime().exec("ipconfig");
@@ -89,29 +90,35 @@ public class SshClient {
             Session session = jsch.getSession(user, host, port);
             session.setPassword(password);
             session.setConfig("StrictHostKeyChecking", "no");
-            log.info("Establishing Connection...");
+			log.info("Attempting to execute port forward...");
+            log.info("Establishing SSH Connection...");
             session.connect();
-            log.info("Connection established: "+ session.isConnected());
+			if (session.isConnected()){
+				log.info("Connection established");
+			} else {
+				log.info("Unable to connect");
+			}
             
             //Establish channel
             Channel channel=session.openChannel("exec");
             InputStream in=channel.getInputStream();
             log.info("Attempting to execute shell script...");
 	        ((ChannelExec)channel).setCommand("chmod +x /tmp/router-script.sh && sh /tmp/router-script.sh");
-            //((ChannelExec)channel).setCommand("echo $SSH_CLIENT");
 	        ((ChannelExec)channel).setErrStream(System.err);	   
 	        channel.connect();
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 	        String line;
         	while ((line = reader.readLine()) != null) {
-        		log.info(line);
+        		log.info("SHELL:"+line);
         	}
         	
         	while (!channel.isClosed()) {
         		Thread.sleep(250);
         	}
-        	
-        	log.info("Exit status: "+ channel.getExitStatus());
+        	if (channel.getExitStatus() == 0) {
+				log.info("PORT FORWARD SUCCESSFUL WITH EXIT STATUS: 0");
+			}
+
 
 
 	        channel.disconnect();
