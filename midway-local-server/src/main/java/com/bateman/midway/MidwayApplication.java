@@ -1,13 +1,18 @@
 package com.bateman.midway;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Arrays;
 
 import com.bateman.midway.view.ViewController;
 import javafx.application.Application;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -21,9 +26,15 @@ import com.bateman.midway.service.SshClient;
 public class MidwayApplication {
 
 	public static void main(String[] args) {
-		//WEBSERVER CURRENTLY DISABLED IN APPLICATION.PROPERTIES
-		SpringApplication.run(MidwayApplication.class, args);
+		//**WEBSERVER CURRENTLY DISABLED IN APPLICATION.PROPERTIES**
+
+		//SET HEADLESS MODE TO FALSE SO WE CAN UTILIZE AWT LIB FOR OPENING LINKS
+		SpringApplicationBuilder builder = new SpringApplicationBuilder(MidwayApplication.class);
+		builder.headless(false).run(args);
+
+		//LAUNCH JAVA FX APPLICATION
 		Application.launch(ViewController.class, args);
+
 
 //		FileProcessor.setServerDatPath("C:/Users/Ethan/AppData/Roaming/.minecraft/servers.dat");
 //		FileProcessor.setPropertiesPath("src/main/resources/server.properties");
