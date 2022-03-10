@@ -19,7 +19,6 @@ import se.llbit.nbt.*;
 public class FileProcessor {
 	
 	private static String propertiesPath; //PATH TO SERVER PROPERTIES FILE
-	private static String serverDatPath; //PATH TO SERVER.DAT FILE
 	static Logger log = LoggerFactory.getLogger(FileProcessor.class);
 	
 	//UPDATE PROPERTY IN SERVER.PROPERTIES FILE
@@ -95,9 +94,13 @@ public class FileProcessor {
 	public static void setPropertiesPath(String path ) {
 		FileProcessor.propertiesPath = path;
 	}
-	public static void setServerDatPath(String path) {FileProcessor.serverDatPath = path;}
 
-	public static void updateClientServerAddress(String targetName, String address) {
+	public static String updateClientServerAddress(String serverDatPath, String targetName) {
+		String address = IPService.pollForIp(targetName);
+		File serverDatFile = new File (serverDatPath);
+		if (!serverDatFile.exists()){
+			return "Game Directory not found!";
+		}
 		log.info("ATTEMPTING TO UPDATE GAME CLIENT SERVERS -> "+ targetName + " : " + address);
 		CompoundTag serverDat;
 		try {
@@ -107,7 +110,7 @@ public class FileProcessor {
 			fileInputStream.close();
 		} catch (Exception e){
 			log.error("Error updating game client server addresses: " + e.getMessage());
-			return;
+			return e.getMessage();
 		}
 
 		serverDat = addServerEntryToTag(serverDat, targetName, address).asCompound();
@@ -121,7 +124,9 @@ public class FileProcessor {
 			log.info("GAME CLIENT SERVERS UPDATED");
 		} catch (Exception e) {
 			e.printStackTrace();
+			return e.getMessage();
 		}
+		return "Game servers updated!";
 	}
 	private static Tag addServerEntryToTag(Tag serverDat, String targetName, String address){
 		//OBTAIN LIST TAG FROM COMPOUND,
