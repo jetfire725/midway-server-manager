@@ -6,10 +6,7 @@ import java.nio.channels.FileLock;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 import org.slf4j.Logger;
@@ -17,12 +14,13 @@ import org.slf4j.LoggerFactory;
 import se.llbit.nbt.*;
 
 public class FileProcessor {
-	
-	private static String propertiesPath; //PATH TO SERVER PROPERTIES FILE
 	static Logger log = LoggerFactory.getLogger(FileProcessor.class);
+	public static Properties properties = new Properties();
+
 	
 	//UPDATE PROPERTY IN SERVER.PROPERTIES FILE
 	public static synchronized boolean setServerProperty(String property, String value) {
+		String propertiesPath = properties.getProperty("serverDir") + "server.properties";
 		File properties = new File (propertiesPath);
 		if (!properties.exists()) {
 			log.error("Property file "+ propertiesPath + "not found.");
@@ -67,7 +65,7 @@ public class FileProcessor {
 	
 	//USE STREAM TO CONVERT PROPERTY FILE TO MAP
 	public static synchronized Map<String, String> propertiesToMap() {
-		
+		String propertiesPath = properties.getProperty("serverDir") + "server.properties";
 		File properties = new File (propertiesPath);
 		if (!properties.exists()) {
 			log.error("Property file "+ propertiesPath + "not found.");
@@ -90,13 +88,10 @@ public class FileProcessor {
         }
         return map;
 	}
-	
-	public static void setPropertiesPath(String path ) {
-		FileProcessor.propertiesPath = path;
-	}
+
 
 	public static String updateClientServerAddress(String serverDatPath, String targetName) {
-		String address = IPService.pollForIp(targetName);
+		String address = IPService.pollForIp(targetName) + ":" + properties.getProperty("serverPort");
 		File serverDatFile = new File (serverDatPath);
 		if (!serverDatFile.exists()){
 			return "Game Directory not found!";
@@ -156,6 +151,5 @@ public class FileProcessor {
 		//NONZERO LENGTH LIST, AND ENTRY DOES NOT EXIST -> APPEND COMPOUND TAG TO LIST
 		serverList.add(compound);
 		return serverDat;
-
 	}
 }

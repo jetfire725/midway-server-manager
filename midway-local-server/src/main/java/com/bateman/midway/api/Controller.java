@@ -1,4 +1,5 @@
 package com.bateman.midway.api;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.json.JSONObject;
@@ -21,6 +22,10 @@ public class Controller {
 	}
 	@GetMapping(path= "getProperties")
 	public static Map<String, String> getProperties() {
-		return FileProcessor.propertiesToMap();
+		System.out.println("Called me!");
+		Map map =  new HashMap<>();
+		map.put("result", "string");
+		return map;
+		//return FileProcessor.propertiesToMap();
 	}
 }

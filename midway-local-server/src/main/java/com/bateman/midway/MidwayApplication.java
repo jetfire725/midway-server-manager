@@ -8,7 +8,9 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
 
+import com.bateman.midway.service.MojangServerClient;
 import com.bateman.midway.view.ViewController;
+import com.dosse.upnp.UPnP;
 import javafx.application.Application;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,16 +24,23 @@ import com.bateman.midway.service.FileProcessor;
 import com.bateman.midway.service.IPService;
 import com.bateman.midway.service.SshClient;
 
+import static java.lang.Integer.parseInt;
+
 @SpringBootApplication
 public class MidwayApplication {
 
 	public static void main(String[] args) {
+		FileProcessor.properties.setProperty("serverPort", "25565");
+
 		//**WEBSERVER CURRENTLY DISABLED IN APPLICATION.PROPERTIES**
 
 		//SET HEADLESS MODE TO FALSE SO WE CAN UTILIZE AWT LIB FOR OPENING LINKS
 		SpringApplicationBuilder builder = new SpringApplicationBuilder(MidwayApplication.class);
 		builder.headless(false).run(args);
 
+		//MojangServerClient.getSpeficVersion("1.18.2");
+		//FORWARD
+		IPService.enableUPNP();
 		//LAUNCH JAVA FX APPLICATION
 		Application.launch(ViewController.class, args);
 

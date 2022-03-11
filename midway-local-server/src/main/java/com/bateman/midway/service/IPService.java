@@ -5,10 +5,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.HashMap;
 
+import com.dosse.upnp.UPnP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import static java.lang.Integer.parseInt;
 
 @Service
 public class IPService {
@@ -62,6 +65,12 @@ public class IPService {
 		} catch (Exception e) {
 			return "False";
 		}
+	}
+
+	public static boolean enableUPNP(){
+		String portString = FileProcessor.properties.getProperty("serverPort");
+		return UPnP.openPortTCP(parseInt(portString));
+
 	}
 	
 }
