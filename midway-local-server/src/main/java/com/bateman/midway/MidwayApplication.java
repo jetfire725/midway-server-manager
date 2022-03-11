@@ -30,7 +30,7 @@ import static java.lang.Integer.parseInt;
 public class MidwayApplication {
 
 	public static void main(String[] args) {
-		FileProcessor.properties.setProperty("serverPort", "25565");
+		FileProcessor.properties.setProperty("serverPort", "25566");
 
 		//**WEBSERVER CURRENTLY DISABLED IN APPLICATION.PROPERTIES**
 
@@ -43,6 +43,13 @@ public class MidwayApplication {
 		IPService.enableUPNP();
 		//LAUNCH JAVA FX APPLICATION
 		Application.launch(ViewController.class, args);
+
+		//CLOSE TCP PORT ON SHUTDOWN
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			public void run() {
+				IPService.disableUPNP();
+			}
+		}));
 
 
 //		FileProcessor.setServerDatPath("C:/Users/Ethan/AppData/Roaming/.minecraft/servers.dat");

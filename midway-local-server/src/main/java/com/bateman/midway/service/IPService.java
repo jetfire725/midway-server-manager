@@ -69,8 +69,26 @@ public class IPService {
 
 	public static boolean enableUPNP(){
 		String portString = FileProcessor.properties.getProperty("serverPort");
-		return UPnP.openPortTCP(parseInt(portString));
+		if (UPnP.openPortTCP(parseInt(portString))){
+			log.info("Enabled UPnP on port "+portString);
+			return true;
+		} else {
+			log.error("Could not enable UPnP on port " + portString );
+			return false;
+		}
 
+
+	}
+
+	public static boolean disableUPNP(){
+		String portString = FileProcessor.properties.getProperty("serverPort");
+		if (UPnP.closePortTCP(parseInt(portString))){
+			log.info("Closed UPnP on port "+portString);
+			return true;
+		} else {
+			log.error("Could not close UPnP on port " + portString);
+			return false;
+		}
 	}
 	
 }
