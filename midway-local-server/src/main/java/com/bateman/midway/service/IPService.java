@@ -16,7 +16,7 @@ import static java.lang.Integer.parseInt;
 @Service
 public class IPService {
 	static Logger log = LoggerFactory.getLogger(SshClient.class);
-	private static String webServerHost = "http://localhost:3000";
+	private static String webServerHost = "https://midway-web-server.herokuapp.com";
 	
 	//GET EXTERNAL IP FROM AWS SERVICE
 	public static String getExternalIp() {
