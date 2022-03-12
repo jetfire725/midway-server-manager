@@ -66,7 +66,7 @@ public class SettingsView {
     private static String getDirectory(){
         DirectoryChooser dirChooser = new DirectoryChooser();
         Stage stage = new Stage();
-        stage.setTitle("Brows directory");
+        stage.setTitle("Browse directory");
         File dir = dirChooser.showDialog(stage);
         if (dir != null){
             return dir.getAbsolutePath();

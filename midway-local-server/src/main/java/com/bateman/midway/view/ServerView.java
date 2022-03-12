@@ -35,7 +35,7 @@ public class ServerView {
 
         //DOWNLOAD JAR LAYOUT
         HBox downloadJarsLayout = new HBox();
-        Label downloadJarsLabel = new Label("Download Jar : ");
+        Label downloadJarsLabel = new Label("Download Jar:  ");
         ArrayList<String> versions = new ArrayList<>(MojangServerClient.versions.keySet());
         Collections.sort(versions);
         ComboBox<String> comboBox = new ComboBox<>(FXCollections.observableList(versions));
