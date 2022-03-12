@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class MojangServerClient {
     static Logger log = LoggerFactory.getLogger(MojangServerClient.class);
-    static HashMap<String, String> versions = getServerVersions();
+    public static HashMap<String, String> versions = getServerVersions();
 
     public static HashMap getServerVersions(){
         log.info("FETCHING SERVER VERSIONS..");
@@ -33,15 +33,20 @@ public class MojangServerClient {
         }
     }
 
-    public static void getSpeficVersion(String id){
+    public static String getSpecificVersionUrl(String id){
+        log.info("FETCHING SERVER "+ id + " URL FROM: " + versions.get(id));
         RestTemplate restTemplate = new RestTemplate();
         try {
             String result = restTemplate.getForObject(versions.get(id), String.class);
-            JSONObject resultObject = new JSONObject(result).getJSONObject("downloads").getJSONObject("server");;
-            String url = resultObject.getString("url");
-            log.info(url);
+            JSONObject resultObject = new JSONObject(result).getJSONObject("downloads");;
+            if (resultObject.has("server")){
+                return resultObject.getJSONObject("server").getString("url");
+            } else {
+                log.error("NO SERVER FOUND FOR " + id);
+                return null;
+            }
         } catch (Exception e){
-            //return null;
+            return null;
         }
     }
 }

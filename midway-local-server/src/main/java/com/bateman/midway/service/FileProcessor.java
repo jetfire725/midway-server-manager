@@ -1,11 +1,13 @@
 package com.bateman.midway.service;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Stream;
 
@@ -151,5 +153,23 @@ public class FileProcessor {
 		//NONZERO LENGTH LIST, AND ENTRY DOES NOT EXIST -> APPEND COMPOUND TAG TO LIST
 		serverList.add(compound);
 		return serverDat;
+	}
+
+	public static boolean downloadServerJar(File file, String url){
+		if (url == null) {
+			return false;
+		}
+		log.info("DOWNLOADING SERVER JAR : " + url);
+		InputStream in = null;
+		try {
+			in = new URL(url).openStream();
+			Files.copy(in, Paths.get(file.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);
+			log.info("DOWNLOAD COMPLETE");
+			return true;
+		} catch (IOException e) {
+			log.error("UNABLE TO DOWNLOAD SERVER JAR : "+ e.getMessage());
+			return false;
+		}
+
 	}
 }

@@ -1,18 +1,9 @@
 package com.bateman.midway;
 
-import java.awt.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 
-import com.bateman.midway.service.MojangServerClient;
-import com.bateman.midway.view.ViewController;
-import com.dosse.upnp.UPnP;
+import com.bateman.midway.view.PrimaryView;
 import javafx.application.Application;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +13,6 @@ import org.springframework.web.filter.CorsFilter;
 
 import com.bateman.midway.service.FileProcessor;
 import com.bateman.midway.service.IPService;
-import com.bateman.midway.service.SshClient;
 
 import static java.lang.Integer.parseInt;
 
@@ -30,7 +20,7 @@ import static java.lang.Integer.parseInt;
 public class MidwayApplication {
 
 	public static void main(String[] args) {
-		FileProcessor.properties.setProperty("serverPort", "25566");
+		FileProcessor.properties.setProperty("serverPort", "25565");
 
 		//**WEBSERVER CURRENTLY DISABLED IN APPLICATION.PROPERTIES**
 
@@ -38,11 +28,11 @@ public class MidwayApplication {
 		SpringApplicationBuilder builder = new SpringApplicationBuilder(MidwayApplication.class);
 		builder.headless(false).run(args);
 
-		//MojangServerClient.getSpeficVersion("1.18.2");
-		//FORWARD
+		//PORT FORWARD
 		IPService.enableUPNP();
 		//LAUNCH JAVA FX APPLICATION
-		Application.launch(ViewController.class, args);
+		Application.launch(PrimaryView.class, args);
+
 
 		//CLOSE TCP PORT ON SHUTDOWN
 		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
