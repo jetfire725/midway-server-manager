@@ -2,8 +2,6 @@ package com.bateman.midway.service;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.channels.FileChannel;
-import java.nio.channels.FileLock;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -73,7 +71,7 @@ public class FileProcessor {
 			log.error("Property file "+ propertiesPath + "not found.");
 			return null;
 		}
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		
         try (Stream<String> stream = Files.lines(Paths.get(propertiesPath), StandardCharsets.UTF_8)) {
             stream.map(s -> s.split("=")).forEach(s -> {
@@ -160,7 +158,7 @@ public class FileProcessor {
 			return false;
 		}
 		log.info("DOWNLOADING SERVER JAR : " + url);
-		InputStream in = null;
+		InputStream in;
 		try {
 			in = new URL(url).openStream();
 			Files.copy(in, Paths.get(file.getAbsolutePath()), StandardCopyOption.REPLACE_EXISTING);

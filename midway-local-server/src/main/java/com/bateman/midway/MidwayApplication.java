@@ -14,7 +14,6 @@ import org.springframework.web.filter.CorsFilter;
 import com.bateman.midway.service.FileProcessor;
 import com.bateman.midway.service.IPService;
 
-import static java.lang.Integer.parseInt;
 
 @SpringBootApplication
 public class MidwayApplication {
@@ -22,7 +21,7 @@ public class MidwayApplication {
 	public static void main(String[] args) {
 		FileProcessor.properties.setProperty("serverPort", "25565");
 
-		//**WEBSERVER CURRENTLY DISABLED IN APPLICATION.PROPERTIES**
+		//**TOMCAT WEBSERVER CURRENTLY DISABLED IN APPLICATION.PROPERTIES**
 
 		//SET HEADLESS MODE TO FALSE SO WE CAN UTILIZE AWT LIB FOR OPENING LINKS
 		SpringApplicationBuilder builder = new SpringApplicationBuilder(MidwayApplication.class);
@@ -33,25 +32,17 @@ public class MidwayApplication {
 		//LAUNCH JAVA FX APPLICATION
 		Application.launch(PrimaryView.class, args);
 
-
 		//CLOSE TCP PORT ON SHUTDOWN
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			public void run() {
-				IPService.disableUPNP();
-			}
-		}));
+		Runtime.getRuntime().addShutdownHook(new Thread(IPService::disableUPNP));
 
 
-//		FileProcessor.setServerDatPath("C:/Users/Ethan/AppData/Roaming/.minecraft/servers.dat");
-//		FileProcessor.setPropertiesPath("src/main/resources/server.properties");
 //
 //		SshClient ssh = new SshClient();
 //		File script = ssh.createScript();
 //		ssh.copyScriptFile(script);
 //		ssh.executePortForward();
 //
-//		IPService.updateExternalIp("theatrejesus");
-//		FileProcessor.updateClientServerAddress("theatrejesus", IPService.pollForIp("theatrejesus"));
+
 
 	}
 	

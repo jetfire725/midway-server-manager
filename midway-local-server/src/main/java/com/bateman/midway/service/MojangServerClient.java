@@ -12,14 +12,14 @@ public class MojangServerClient {
     static Logger log = LoggerFactory.getLogger(MojangServerClient.class);
     public static HashMap<String, String> versions = getServerVersions();
 
-    public static HashMap getServerVersions(){
+    public static HashMap<String, String> getServerVersions(){
         log.info("FETCHING SERVER VERSIONS..");
         RestTemplate restTemplate = new RestTemplate();
         try {
             String result = restTemplate.getForObject("https://launchermeta.mojang.com/mc/game/version_manifest.json", String.class);
             JSONObject resultObject = new JSONObject(result);
             JSONArray versionsObject = resultObject.getJSONArray("versions");
-            HashMap versions = new HashMap<String, String>();
+            HashMap<String, String> versions = new HashMap<>();
             for (int i=0; i< versionsObject.length(); i++){
                 String id = versionsObject.getJSONObject(i).getString("id");
                 String url = versionsObject.getJSONObject(i).getString("url");
@@ -38,7 +38,7 @@ public class MojangServerClient {
         RestTemplate restTemplate = new RestTemplate();
         try {
             String result = restTemplate.getForObject(versions.get(id), String.class);
-            JSONObject resultObject = new JSONObject(result).getJSONObject("downloads");;
+            JSONObject resultObject = new JSONObject(result).getJSONObject("downloads");
             if (resultObject.has("server")){
                 return resultObject.getJSONObject("server").getString("url");
             } else {

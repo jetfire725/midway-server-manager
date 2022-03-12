@@ -36,14 +36,12 @@ public class ServerView {
         //DOWNLOAD JAR LAYOUT
         HBox downloadJarsLayout = new HBox();
         Label downloadJarsLabel = new Label("Download Jar : ");
-        ArrayList<String> versions = new ArrayList<String>(MojangServerClient.versions.keySet());
+        ArrayList<String> versions = new ArrayList<>(MojangServerClient.versions.keySet());
         Collections.sort(versions);
-        ComboBox<String> comboBox = new ComboBox<String>(FXCollections.observableList(versions));
+        ComboBox<String> comboBox = new ComboBox<>(FXCollections.observableList(versions));
         comboBox.setPromptText("Select Version");
         Button downloadButton = new Button("Download");
-        downloadButton.setOnAction(event -> {
-            downloadJar(comboBox);
-        });
+        downloadButton.setOnAction(event -> downloadJar(comboBox));
 
         downloadJarsLayout.setPadding(new Insets(0,0,10,0));
         downloadJarsLayout.getChildren().addAll(downloadJarsLabel, comboBox, downloadButton);
@@ -72,17 +70,22 @@ public class ServerView {
         if (file != null){
             PrimaryView.statusBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
             PrimaryView.statusLabel.setText("Downloading jar...");
-            Thread thread = new Thread(){
-                public void run (){
-                    String url = MojangServerClient.getSpecificVersionUrl(versionId);
-                    FileProcessor.downloadServerJar(file, url);
-                    Platform.runLater(()->{
-                        PrimaryView.statusBar.setProgress(0);
+            Thread thread = new Thread(() -> {
+                String url = MojangServerClient.getSpecificVersionUrl(versionId);
+                boolean success = FileProcessor.downloadServerJar(file, url);
+                Platform.runLater(()->{
+                    PrimaryView.statusBar.setProgress(0);
+                    if (success){
                         PrimaryView.statusLabel.setText("Download Complete");
-                    });
+                    } else {
+                        PrimaryView.statusLabel.setText("Error downloading jar");
+                    }
 
-                }
-            };
+
+                });
+
+
+            });
             thread.start();
         }
     }
@@ -92,7 +95,6 @@ public class ServerView {
         fileChooser.setInitialFileName(filename);
         Stage stage = new Stage();
         stage.setTitle("Browse directory");
-        File file = fileChooser.showSaveDialog(stage);
-        return file;
+        return fileChooser.showSaveDialog(stage);
     }
 }

@@ -26,7 +26,7 @@ public class PrimaryView extends Application {
     public static ProgressBar statusBar = new ProgressBar(0);
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("Midway Manager");
         Image image = new Image(getClass().getResource("/icon.png").toExternalForm());
         primaryStage.getIcons().add(image);
@@ -67,29 +67,25 @@ public class PrimaryView extends Application {
         vLayout.getChildren().addAll(loadServerLayout);
 
         //ACTIONS
-        updateGameServersButton.setOnAction(event -> {
-           loadServer(serverIdBox);
-
-        });
+        updateGameServersButton.setOnAction(event -> loadServer(serverIdBox));
         return vLayout;
     }
 
     private void loadServer(TextField serverIdBox){
         statusBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
         statusLabel.setText("Checking Server ID...");
-        Thread thread = new Thread(){
-            public void run(){
-                if (!serverIdBox.getText().isEmpty() ){
-                    String result = FileProcessor.updateClientServerAddress(FileProcessor.properties.getProperty("gameDir")+"servers.dat", serverIdBox.getText());
-                } else {
-                    serverIdBox.setPromptText("Enter Server ID!");
-                }
+        Thread thread = new Thread(() -> {
+            if (!serverIdBox.getText().isEmpty() ){
+                String result = FileProcessor.updateClientServerAddress(FileProcessor.properties.getProperty("gameDir")+"servers.dat", serverIdBox.getText());
                 Platform.runLater(()->{
                     statusBar.setProgress(0);
-                    statusLabel.setText("Game Servers Updated");
+                    statusLabel.setText(result);
                 });
+            } else {
+                serverIdBox.setPromptText("Enter Server ID!");
             }
-        };
+
+        });
         thread.start();
 
     }
