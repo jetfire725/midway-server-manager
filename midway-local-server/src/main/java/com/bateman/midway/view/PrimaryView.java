@@ -76,7 +76,7 @@ public class PrimaryView extends Application {
         statusLabel.setText("Checking Server ID...");
         Thread thread = new Thread(() -> {
             if (!serverIdBox.getText().isEmpty() ){
-                String result = FileProcessor.updateClientServerAddress(FileProcessor.properties.getProperty("gameDir")+"servers.dat", serverIdBox.getText());
+                String result = FileProcessor.updateClientServerAddress(FileProcessor.properties.getProperty("gameDir")+"/servers.dat", serverIdBox.getText());
                 Platform.runLater(()->{
                     statusBar.setProgress(0);
                     statusLabel.setText(result);

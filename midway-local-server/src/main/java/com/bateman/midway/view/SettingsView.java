@@ -23,7 +23,7 @@ public class SettingsView {
         String username = System.getProperty("user.name");
         Label gameDirLabel = new Label("Game Directory: ");
         TextField gameDirField = new TextField();
-        String gameDir = "C:/Users/" + username + "/AppData/Roaming/.minecraft/";
+        String gameDir = "C:/Users/" + username + "/AppData/Roaming/.minecraft";
         if (new File(gameDir).exists()){
             FileProcessor.properties.setProperty("gameDir", gameDir);
             gameDirField.setText(gameDir);
