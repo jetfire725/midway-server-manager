@@ -27,11 +27,11 @@ public class ServerView {
         Font font = Font.font("Verdana", FontWeight.BOLD,16);
         serverIdBox.setPromptText("Server ID");
         serverIdBox.setFont(font);
-        HBox hLayout = new HBox();
-        hLayout.getChildren().addAll(serverIdBox, updateIpButton);
-        hLayout.setPadding(new Insets(0, 0, 10, 0));
-        VBox vlayout = new VBox();
-        vlayout.setPadding(new Insets(10,10,10,10));
+        updateIpButton.setOnAction(event -> registerServer(serverIdBox));
+        HBox registerServerLayout = new HBox();
+        registerServerLayout.getChildren().addAll(serverIdBox, updateIpButton);
+        registerServerLayout.setPadding(new Insets(0, 0, 10, 0));
+
 
         //DOWNLOAD JAR LAYOUT
         HBox downloadJarsLayout = new HBox();
@@ -42,23 +42,40 @@ public class ServerView {
         comboBox.setPromptText("Select Version");
         Button downloadButton = new Button("Download");
         downloadButton.setOnAction(event -> downloadJar(comboBox));
-
         downloadJarsLayout.setPadding(new Insets(0,0,10,0));
         downloadJarsLayout.getChildren().addAll(downloadJarsLabel, comboBox, downloadButton);
 
-        vlayout.getChildren().addAll(hLayout, downloadJarsLayout);
 
-        //actions
-        updateIpButton.setOnAction(event -> {
-            if (!serverIdBox.getText().isEmpty()){
-                IPService.updateExternalIp(serverIdBox.getText());
-            } else {
-                serverIdBox.setPromptText("Enter Server ID!");
-            }
+        VBox vlayout = new VBox();
+        vlayout.setPadding(new Insets(10,10,10,10));
+        vlayout.getChildren().addAll(registerServerLayout, downloadJarsLayout);
 
-        });
+
 
         return vlayout;
+    }
+
+    private static void registerServer(TextField serverIdBox){
+        if (!serverIdBox.getText().isEmpty()){
+            PrimaryView.statusBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+            PrimaryView.statusLabel.setText("Registering server...");
+            Thread thread = new Thread(() -> {
+                boolean success = IPService.updateExternalIp(serverIdBox.getText());
+                Platform.runLater(()->{
+                    PrimaryView.statusBar.setProgress(0);
+                    if (success){
+                        PrimaryView.statusLabel.setText("Server registered successfully");
+                    } else {
+                        PrimaryView.statusLabel.setText("Unable to register server");
+                    }
+                });
+
+            });
+            thread.start();
+
+        } else {
+            serverIdBox.setPromptText("Enter Server ID!");
+        }
     }
 
     private static void downloadJar(ComboBox<String> comboBox){
@@ -76,7 +93,7 @@ public class ServerView {
                 Platform.runLater(()->{
                     PrimaryView.statusBar.setProgress(0);
                     if (success){
-                        PrimaryView.statusLabel.setText("Download Complete");
+                        PrimaryView.statusLabel.setText("Download complete");
                     } else {
                         PrimaryView.statusLabel.setText("Error downloading jar");
                     }
