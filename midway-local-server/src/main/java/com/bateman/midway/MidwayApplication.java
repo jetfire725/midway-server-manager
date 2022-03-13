@@ -27,8 +27,12 @@ public class MidwayApplication {
 		SpringApplicationBuilder builder = new SpringApplicationBuilder(MidwayApplication.class);
 		builder.headless(false).run(args);
 
-		//PORT FORWARD
-		IPService.enableUPNP();
+		//OPEN TCP PORT ON STARTUP
+		Thread upnpThread = new Thread(()->{
+			IPService.enableUPNP();
+		});
+		upnpThread.start();
+
 		//LAUNCH JAVA FX APPLICATION
 		Application.launch(PrimaryView.class, args);
 
