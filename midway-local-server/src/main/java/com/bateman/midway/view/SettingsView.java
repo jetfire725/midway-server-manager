@@ -23,6 +23,7 @@ public class SettingsView {
         String username = System.getProperty("user.name");
         Label gameDirLabel = new Label("Game Directory: ");
         TextField gameDirField = new TextField();
+        gameDirField.setEditable(false);
         String gameDir = "C:/Users/" + username + "/AppData/Roaming/.minecraft";
         if (new File(gameDir).exists()){
             FileProcessor.properties.setProperty("gameDir", gameDir);
@@ -47,6 +48,7 @@ public class SettingsView {
         HBox serverDirLayout = new HBox();
         Label serverDirLabel = new Label("Server Directory:");
         TextField serverDirField = new TextField();
+        serverDirField.setEditable(false);
         serverDirField.setMinWidth(350);
         serverDirField.setPromptText("Browse server directory");
         Button serverBrowseBtn = new Button("  ...  ");

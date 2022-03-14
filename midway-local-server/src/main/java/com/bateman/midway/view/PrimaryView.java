@@ -1,6 +1,6 @@
 package com.bateman.midway.view;
 
-import com.bateman.midway.service.FileProcessor;
+import com.bateman.midway.service.IPService;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -8,12 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -23,16 +19,25 @@ import java.net.URISyntaxException;
 
 public class PrimaryView extends Application {
     public static Label statusLabel = new Label();
-    public static ProgressBar statusBar = new ProgressBar(0);
+    private static ProgressBar statusBar = new ProgressBar(0);
+    public enum Status {
+        SUCCESS,
+        FAIL,
+        THINKING
+    }
 
     @Override
     public void start(Stage primaryStage) {
+
+        //OPEN TCP PORT ON STARTUP
+        startUpNPThread();
+
         primaryStage.setTitle("Midway Manager");
         Image image = new Image(getClass().getResource("/icon.png").toExternalForm());
         primaryStage.getIcons().add(image);
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
-        Tab clientTab = new Tab("Client"  , getClientLayout());
+        Tab clientTab = new Tab("Client"  , ClientView.getClientLayout());
         Tab serverTab = new Tab("Server", ServerView.getServerLayout());
         Tab settingsTab = new Tab("Settings", SettingsView.getSettingsLayout());
         Tab experimentalTab = new Tab("Experimental", getExperimentalLayout());
@@ -46,51 +51,7 @@ public class PrimaryView extends Application {
         statusBar.setPrefWidth(primaryStage.getScene().getWidth());
         statusLabel.setPadding(new Insets(0,0,0,10));
         tabPane.requestFocus();
-
     }
-
-
-
-    private VBox getClientLayout(){
-        VBox vLayout = new VBox();
-        vLayout.setPadding(new Insets(10,10,10,10));
-
-        //LOAD SERVER LAYOUT
-        Button updateGameServersButton = new Button("Load Server");
-        TextField serverIdBox = new TextField();
-        Font font = Font.font("Verdana", FontWeight.BOLD,16);
-        serverIdBox.setPromptText("Server ID");
-        serverIdBox.setFont(font);
-        HBox loadServerLayout = new HBox();
-        loadServerLayout.getChildren().addAll(serverIdBox, updateGameServersButton);
-        loadServerLayout.setPadding(new Insets(0, 0, 10, 0));
-        vLayout.getChildren().addAll(loadServerLayout);
-
-        //ACTIONS
-        updateGameServersButton.setOnAction(event -> loadServer(serverIdBox));
-        return vLayout;
-    }
-
-    private void loadServer(TextField serverIdBox){
-        statusBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
-        statusLabel.setText("Checking Server ID...");
-        Thread thread = new Thread(() -> {
-            if (!serverIdBox.getText().isEmpty() ){
-                String result = FileProcessor.updateClientServerAddress(FileProcessor.properties.getProperty("gameDir")+"/servers.dat", serverIdBox.getText());
-                Platform.runLater(()->{
-                    statusBar.setProgress(0);
-                    statusLabel.setText(result);
-                });
-            } else {
-                serverIdBox.setPromptText("Enter Server ID!");
-            }
-
-        });
-        thread.start();
-
-    }
-
-
 
     private VBox getAboutLayout(){
         VBox vLayout = new VBox();
@@ -121,10 +82,40 @@ public class PrimaryView extends Application {
         return vLayout;
     }
 
+    private void startUpNPThread(){
+        //OPEN TCP PORT ON STARTUP
+        setStatusBar(Status.THINKING);
+        PrimaryView.statusLabel.setText("Attempting to enable UPnP...");
+        Thread upnpThread = new Thread(()->{
+            boolean uPnP = IPService.enableUPNP();
+            Platform.runLater(()->{
+                if (uPnP){
+                    PrimaryView.statusLabel.setText("UPnP enabled");
+                    setStatusBar(Status.SUCCESS);
+                } else {
+                    setStatusBar(Status.FAIL);
+                }
+            });
+        });
+        upnpThread.start();
+    }
+
+    public static void setStatusBar(Status status){
+        switch (status){
+            case SUCCESS:
+                statusBar.setStyle("-fx-accent: forestgreen");
+                statusBar.setProgress(100);
+                break;
+            case FAIL:
+                statusBar.setStyle("-fx-accent: firebrick");
+                statusBar.setProgress(100);
+                break;
+            case THINKING:
+                statusBar.setStyle("-fx-accent: #0093ff");
+                statusBar.setProgress(ProgressIndicator.INDETERMINATE_PROGRESS);
+                break;
 
 
-
-
-
-
+        }
+    }
 }

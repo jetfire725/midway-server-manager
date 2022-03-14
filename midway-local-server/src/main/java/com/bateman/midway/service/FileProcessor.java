@@ -90,12 +90,8 @@ public class FileProcessor {
 	}
 
 
-	public static String updateClientServerAddress(String serverDatPath, String targetName) {
+	public static boolean updateClientServerAddress(String serverDatPath, String targetName) {
 		String address = IPService.pollForIp(targetName) + ":" + properties.getProperty("serverPort");
-		File serverDatFile = new File (serverDatPath);
-		if (!serverDatFile.exists()){
-			return "Game Directory not found!";
-		}
 		log.info("ATTEMPTING TO UPDATE GAME CLIENT SERVERS -> "+ targetName + " : " + address);
 		CompoundTag serverDat;
 		try {
@@ -103,25 +99,19 @@ public class FileProcessor {
 			FileInputStream fileInputStream = new FileInputStream(serverDatPath);
 			serverDat = CompoundTag.read(new DataInputStream(fileInputStream)).asCompound();
 			fileInputStream.close();
-		} catch (Exception e){
-			log.error("Error updating game client server addresses: " + e.getMessage());
-			return e.getMessage();
-		}
+			serverDat = addServerEntryToTag(serverDat, targetName, address).asCompound();
 
-		serverDat = addServerEntryToTag(serverDat, targetName, address).asCompound();
-
-		//WRITE ROOT TAG TO FILE
-		try {
-			FileOutputStream fileOutputStream = new FileOutputStream("C:/Users/Ethan/AppData/Roaming/.minecraft/servers.dat");
+			//WRITE ROOT TAG TO FILE
+			FileOutputStream fileOutputStream = new FileOutputStream(serverDatPath);
 			serverDat.write(new DataOutputStream(fileOutputStream));
 			fileOutputStream.close();
 
 			log.info("GAME CLIENT SERVERS UPDATED");
-		} catch (Exception e) {
-			e.printStackTrace();
-			return e.getMessage();
+		} catch (Exception e){
+			log.error("Error updating game servers: " + e.getMessage());
+			return false;
 		}
-		return "Game servers updated!";
+		return true;
 	}
 	private static Tag addServerEntryToTag(Tag serverDat, String targetName, String address){
 		//OBTAIN LIST TAG FROM COMPOUND,

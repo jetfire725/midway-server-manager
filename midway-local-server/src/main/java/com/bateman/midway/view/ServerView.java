@@ -57,15 +57,16 @@ public class ServerView {
 
     private static void registerServer(TextField serverIdBox){
         if (!serverIdBox.getText().isEmpty()){
-            PrimaryView.statusBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+            PrimaryView.setStatusBar(PrimaryView.Status.THINKING);
             PrimaryView.statusLabel.setText("Registering server...");
             Thread thread = new Thread(() -> {
                 boolean success = IPService.updateExternalIp(serverIdBox.getText());
                 Platform.runLater(()->{
-                    PrimaryView.statusBar.setProgress(0);
                     if (success){
+                        PrimaryView.setStatusBar(PrimaryView.Status.SUCCESS);
                         PrimaryView.statusLabel.setText("Server registered successfully");
                     } else {
+                        PrimaryView.setStatusBar(PrimaryView.Status.FAIL);
                         PrimaryView.statusLabel.setText("Unable to register server");
                     }
                 });
@@ -85,16 +86,17 @@ public class ServerView {
         String versionId = comboBox.getValue();
         File file = openSaveWindow("minecraft_server." + versionId + ".jar");
         if (file != null){
-            PrimaryView.statusBar.setProgress(ProgressBar.INDETERMINATE_PROGRESS);
+            PrimaryView.setStatusBar(PrimaryView.Status.THINKING);
             PrimaryView.statusLabel.setText("Downloading jar...");
             Thread thread = new Thread(() -> {
                 String url = MojangServerClient.getSpecificVersionUrl(versionId);
                 boolean success = FileProcessor.downloadServerJar(file, url);
                 Platform.runLater(()->{
-                    PrimaryView.statusBar.setProgress(0);
                     if (success){
+                        PrimaryView.setStatusBar(PrimaryView.Status.SUCCESS);
                         PrimaryView.statusLabel.setText("Download complete");
                     } else {
+                        PrimaryView.setStatusBar(PrimaryView.Status.FAIL);
                         PrimaryView.statusLabel.setText("Error downloading jar");
                     }
 

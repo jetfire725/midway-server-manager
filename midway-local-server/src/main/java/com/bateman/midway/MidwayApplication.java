@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import com.bateman.midway.view.PrimaryView;
 import javafx.application.Application;
+import javafx.application.Platform;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
@@ -26,12 +27,6 @@ public class MidwayApplication {
 		//SET HEADLESS MODE TO FALSE SO WE CAN UTILIZE AWT LIB FOR OPENING LINKS
 		SpringApplicationBuilder builder = new SpringApplicationBuilder(MidwayApplication.class);
 		builder.headless(false).run(args);
-
-		//OPEN TCP PORT ON STARTUP
-		Thread upnpThread = new Thread(()->{
-			IPService.enableUPNP();
-		});
-		upnpThread.start();
 
 		//LAUNCH JAVA FX APPLICATION
 		Application.launch(PrimaryView.class, args);
