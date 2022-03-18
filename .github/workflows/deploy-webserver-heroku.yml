@@ -5,6 +5,7 @@ on:
       - master
     paths: 
       - midway-web-server/**
+      - .github/workflows/**
 jobs: 
   build:
     runs-on: ubuntu-latest
