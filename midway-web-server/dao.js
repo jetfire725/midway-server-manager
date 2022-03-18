@@ -1,4 +1,3 @@
-//server mappings
 let iptable = {};
 
 function updateIp(serverId, ip){
