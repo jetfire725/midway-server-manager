@@ -2,9 +2,9 @@ name: deploy-webserver-heroku
 on: 
   push: 
     Branches: 
-        - master
+      - master
     paths: 
-      midway-web-server
+      - midway-web-server
 jobs: 
   build:
     runs-on: ubuntu-latest
