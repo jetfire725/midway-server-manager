@@ -1,4 +1,4 @@
-let iptable = {theatrejesus: "192.168.50.234"};
+let iptable = {};
 
 function updateIp(serverId, ip){
     console.log(`Updating address for ${serverId}...`)
