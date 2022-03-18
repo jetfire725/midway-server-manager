@@ -1,0 +1,19 @@
+name: deploy-webserver-heroku
+on: 
+  push: 
+    Branches: 
+        - master
+  paths: 
+    midway-web-server
+jobs: 
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Login to Heroku container registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+        run: heroku container:login
+      - name: deploy midway-web-server to heroku
+        run:  |
+          git subtree push --prefix midway-web-server https://git.heroku.com/midway-web-server.git master
