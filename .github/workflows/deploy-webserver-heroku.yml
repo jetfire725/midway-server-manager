@@ -3,8 +3,8 @@ on:
   push: 
     Branches: 
         - master
-  paths: 
-    midway-web-server
+    paths: 
+      midway-web-server
 jobs: 
   build:
     runs-on: ubuntu-latest
