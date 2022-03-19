@@ -1,11 +1,12 @@
 const express   = require('express')
 const database = require('./dao.js')
-var proxy = require("node-tcp-proxy");
-const request = require('request');
+// var proxy = require("node-tcp-proxy");
+// const request = require('request');
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json())
+app.use('/downloads', express.static('downloads'))
 
 //UPDATE DATABASE IP TABLE
 app.post('/update/ip', (req, res) => {
@@ -24,8 +25,6 @@ app.post('/get/ip', (req, res) => {
     res.send(ip);
     
 });
-
-
 
 app.listen(port, ()=>{
     console.log(`Listening on port ${port}...`)

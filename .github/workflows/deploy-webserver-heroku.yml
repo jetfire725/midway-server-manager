@@ -1,12 +1,12 @@
 name: deploy-webserver-heroku
-on: 
-  push: 
-    Branches: 
+on:
+  push:
+    branches:
       - master
     paths: 
       - midway-web-server/**
       - .github/workflows/**
-jobs: 
+jobs:
   build:
     runs-on: ubuntu-latest
     steps:
