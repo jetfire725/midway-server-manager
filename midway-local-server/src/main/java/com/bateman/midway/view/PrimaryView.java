@@ -93,6 +93,7 @@ public class PrimaryView extends Application {
                     PrimaryView.statusLabel.setText("UPnP enabled");
                     setStatusBar(Status.SUCCESS);
                 } else {
+                    PrimaryView.statusLabel.setText("UPnP unsuccessful, check router settings");
                     setStatusBar(Status.FAIL);
                 }
             });

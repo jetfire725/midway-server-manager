@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.bateman</groupId>
 	<artifactId>midway</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0-SNAPSHOT</version>
 	<name>midway</name>
 	<description>Server manager for the midway server.</description>
 	<properties>
@@ -21,7 +21,7 @@
 	<repositories>
 		<repository>
 			<id>third-party-libs</id>
-			<url>file://${project.basedir}/third-party-libs</url>
+			<url>file://${project.basedir}</url>
 		</repository>
 	</repositories>
 	<dependencies>
