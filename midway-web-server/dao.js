@@ -1,13 +1,19 @@
 let redis;
-if (process.env.REDISTOGO_URL) {
-    let rtg = require("url").parse(process.env.REDISTOGO_URL);
-    redis = require("redis").createClient(rtg.port, rtg.hostname);
+if (process.env.REDIS_HOST & process.env.REDIS_PORT & process.env.REDIS_PASSWORD) {
+    redis = require("redis").createClient(
+        { 
+        socket: {
+            port: process.env.REDIS_PORT,
+            host: process.env.REDIS_HOST
+        },
+        password: process.env.REDIS_PASSWORD
+    })
     
-    redis.auth(rtg.auth.split(":")[1]);
 } else {
-    redis = require('redis').createClient();
+    redis = require("redis").createClient()
 }
-redis.connect();
+redis.connect()
+
 redis.on('connect', function() {
   console.log('Connected to redis instance');
 }).on('error', function() {
