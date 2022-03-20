@@ -8,21 +8,24 @@ const port = process.env.PORT || 3000;
 app.use(express.json())
 app.use('/downloads', express.static('downloads'))
 
+
 //UPDATE DATABASE IP TABLE
 app.post('/update/ip', (req, res) => {
-    const serverId = req.body.serverId;
-    const ip = req.body.ip;
-    let status = database.updateIp(serverId, ip)
-    if (status){
-      res.sendStatus(200)  
-    }
+    let serverId = req.body.serverId;
+    let ip = req.body.ip;
+    database.updateIp(serverId, ip).then(status =>{
+       res.send(status) 
+    })
+    
     
 });
 
-app.post('/get/ip', (req, res) => {
-    const serverId = req.body.serverId;
-    let ip = database.getIp(serverId);
-    res.send(ip);
+app.post('/get/ip',(req, res) => {
+    let serverId = req.body.serverId;
+    database.getIp(serverId).then(result =>{
+        res.send(result);
+    })
+    
     
 });
 
