@@ -9,7 +9,7 @@ app.use(express.json())
 app.use('/downloads', express.static('downloads'))
 
 
-//UPDATE DATABASE IP TABLE
+//UPDATE SERVER IP
 app.post('/update/ip', (req, res) => {
     let serverId = req.body.serverId;
     let ip = req.body.ip;
@@ -20,6 +20,7 @@ app.post('/update/ip', (req, res) => {
     
 });
 
+//GET IP
 app.post('/get/ip',(req, res) => {
     let serverId = req.body.serverId;
     database.getIp(serverId).then(result =>{

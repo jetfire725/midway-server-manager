@@ -1,5 +1,6 @@
+//SETUP REDIS CONNECTION
 let redis;
-if (process.env.REDIS_HOST & process.env.REDIS_PORT & process.env.REDIS_PASSWORD) {
+if (process.env.REDIS_HOST && process.env.REDIS_PORT && process.env.REDIS_PASSWORD) {
     redis = require("redis").createClient(
         { 
         socket: {
@@ -14,13 +15,16 @@ if (process.env.REDIS_HOST & process.env.REDIS_PORT & process.env.REDIS_PASSWORD
 }
 redis.connect()
 
+// STATUS UPDATE CALLBACK FUNCTIONS
 redis.on('connect', function() {
   console.log('Connected to redis instance');
-}).on('error', function() {
-    console.log('Error connecting to redis');
+});
+redis.on('error', function(err) {
+    console.log(`Redis ${err}`);
   });
 
 
+//QUERY FUNCTIONS
 async function updateIp(serverId, ip){
     console.log(`Updating address for ${serverId}...`)
     result = await redis.set(serverId, ip);

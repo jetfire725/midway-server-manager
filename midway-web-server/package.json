@@ -12,9 +12,7 @@
   "dependencies": {
     "express": "^4.17.1",
     "http-proxy": "^1.18.1",
-    "node-tcp-proxy": "0.0.26",
     "redis": "^4.0.4",
-    "request": "^2.88.2",
-    "util": "^0.12.4"
+    "request": "^2.88.2"
   }
 }
