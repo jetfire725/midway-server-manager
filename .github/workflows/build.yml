@@ -31,7 +31,7 @@ jobs:
         uses: actions/create-release@v1
         id: create-release
         with:
-          tag_name: ${{ needs.build.outputs.version }}
+          tag_name: ${{ steps.read-revision.outputs.version }}
           release_name: Release ${{ steps.read-revision.outputs.version }}
       - name: Upload Release Asset
         id: upload-release-asset 
