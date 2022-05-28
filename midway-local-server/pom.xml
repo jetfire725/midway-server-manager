@@ -10,11 +10,12 @@
 	</parent>
 	<groupId>com.bateman</groupId>
 	<artifactId>midway</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>${revision}-SNAPSHOT</version>
 	<name>midway</name>
 	<description>Server manager for the midway server.</description>
 	<properties>
 		<java.version>11</java.version>
+		<revision>1.0</revision>
 	</properties>
 
 	<!--Local repository for third party jars -->
