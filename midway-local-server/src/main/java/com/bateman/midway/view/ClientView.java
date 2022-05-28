@@ -36,12 +36,13 @@ public class ClientView {
     }
 
     private static void loadServer(TextField serverIdBox){
-        PrimaryView.setStatusBar(PrimaryView.Status.THINKING);
-        PrimaryView.statusLabel.setText("Checking Server ID...");
         if (serverIdBox.getText().isEmpty()){
             serverIdBox.setPromptText("Enter Server ID!");
             return;
         }
+        PrimaryView.setStatusBar(PrimaryView.Status.THINKING);
+        PrimaryView.statusLabel.setText("Checking Server ID...");
+
         File file = new File(FileProcessor.properties.getProperty("gameDir")+"/servers.dat");
         if (!file.exists()){
             PrimaryView.setStatusBar(PrimaryView.Status.FAIL);

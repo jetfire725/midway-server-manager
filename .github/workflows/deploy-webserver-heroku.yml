@@ -5,9 +5,8 @@ on:
       - master
     paths: 
       - midway-web-server/**
-      - .github/workflows/**
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
