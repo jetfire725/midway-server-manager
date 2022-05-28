@@ -28,8 +28,7 @@ jobs:
         working-directory: ./midway-local-server
         run: mvn clean package
   release:
-  needs: 
-    - build
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/create-release@v1
